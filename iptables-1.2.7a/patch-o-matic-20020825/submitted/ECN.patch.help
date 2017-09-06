@@ -1,0 +1,12 @@
+Author: Harald Welte <laforge@gnumonks.org>
+Status: Pending for kernel inclusion.
+  
+  This option adds a `ECN' target, which can be used in the iptables mangle
+  table.  
+
+  You can use this target to set the ECN bits from the IPv4 and TCP header
+  an IP packet.  This is particularly useful, if you need to work around
+  existing ECN blackholes on the internet, but don't want to disable
+  ECN support in general.
+
+ 

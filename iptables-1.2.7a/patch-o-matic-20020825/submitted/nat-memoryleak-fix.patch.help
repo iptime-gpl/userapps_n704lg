@@ -1,0 +1,7 @@
+Author: zhongyu <zhongyu@ecfounder.com>
+Status: Submitted for kernel inclusion at 2.4.19-pre10 time
+
+This fixes a memory leak in the iptable_nat load/unload code,
+which causes a certain memory chunk not being free'd at module
+unload time.
+

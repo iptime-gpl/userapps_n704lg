@@ -1,0 +1,5 @@
+diff -r net/tcp.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/net/tcp.h
+220c220
+< #if (BITS_PER_LONG == 64)
+---
+> #if BITS_PER_LONG == 64

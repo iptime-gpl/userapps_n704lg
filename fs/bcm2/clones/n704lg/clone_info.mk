@@ -1,0 +1,3 @@
+PRODUCT_ID := n704lg
+CLASS_ID:=iptime
+BCM5357C0_SUPPORT:=y

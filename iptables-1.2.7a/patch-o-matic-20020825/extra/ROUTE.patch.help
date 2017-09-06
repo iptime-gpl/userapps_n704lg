@@ -1,0 +1,25 @@
+Author: Cédric de Launois <delaunois@info.ucl.ac.be>
+Status: In Development/Works for me
+  
+  This option adds a `ROUTE' target, which allows you to directly resend
+  a received packet through a specified interface, even and especially
+  if the packet IP address is one of the router itself. Those packets 
+  are locally delivered and cannot be forwarded to another computer 
+  using the standard routing mechanisms.
+
+  ROUTE target v1.2.7 options:
+    --iface   name            Send the packet directly through iface name.
+    --ifindex index           Send the packet directly through iface index.
+
+  Example :
+  You want to install a ssh server on a computer inside your network but 
+  you also want it to appear exactly as if it was located on the router.
+  A solution is to simply reroute packets with destination port 22 to the
+  computer having the same IP as the router and hosting the ssh service,
+  thanks to this ROUTE target and an ipip tunnel.
+
+  # iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 22 -j ROUTE --iface tunl1
+  # iptables -A PREROUTING -t nat -i tunl1 --j ROUTE --iface eth0
+
+
+ 

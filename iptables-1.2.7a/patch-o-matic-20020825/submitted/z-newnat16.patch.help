@@ -1,0 +1,12 @@
+Author: Harald Welte <laforge@gnumonks.org>, 
+	Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Status: Submitted for 2.4.20-pre1
+
+Implementation of the new nat API for kernel 2.4.19-pre4 and above.
+
+- enables us to have multiple related expectations
+  (necessarry for H.323, real IRC and PPTP tracking, ...)
+- allows expectations to have timeouts
+- adds full SACK support to the NAT code (we no longer strip
+  SACKPERM option out of all SYN patckes for ftp/irc connections)
+

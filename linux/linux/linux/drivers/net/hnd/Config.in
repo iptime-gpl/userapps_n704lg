@@ -1,0 +1,68 @@
+#
+# Broadcom Home Networking Division (HND) driver configuration
+#
+# $Copyright Open Broadcom Corporation$
+#
+
+mainmenu_option next_comment
+   comment 'Broadcom HND network devices'
+   dep_bool 'Broadcom HND network device support' CONFIG_HND $CONFIG_PCI
+   if [ "$CONFIG_HND" != "n" ]; then
+      dep_tristate '  InsideLine HPNA support' CONFIG_IL $CONFIG_HND
+      if [ "$CONFIG_IL" != "n" ]; then
+         bool '    BCM42xx support' CONFIG_IL_42XX
+         bool '    BCM47xx support' CONFIG_IL_47XX
+         int '    LARQ buffer allocation (0 = tiny, 2 = huge)' CONFIG_LARQ_BUF 0
+      fi
+      dep_tristate '  10/100/1000 Ethernet support' CONFIG_ET $CONFIG_HND 
+      if [ "$CONFIG_ET" != "n" ]; then
+         bool '    BCM47xx support' CONFIG_ET_47XX
+      fi
+      dep_tristate '    BCMCTF support' CONFIG_BCM_CTF $CONFIG_HND
+      dep_bool '  Broadcom PLC network failover support' CONFIG_PLC $CONFIG_ET_47XX
+      dep_tristate '  WL emulation using Gigabit ethernet' CONFIG_WL_EMULATOR $CONFIG_HND
+      if [ "$CONFIG_WL_EMULATOR" != "n" ]; then
+         comment '    BCM57xx support is ON'
+         define_tristate CONFIG_BCM57XX $CONFIG_WL_EMULATOR
+         comment '    Wireless feature variant is set to AP'
+         define_tristate CONFIG_WL $CONFIG_WL_EMULATOR
+         define_bool CONFIG_WL_USE_AP y
+      else
+         dep_tristate '  BCM57xx Gigabit Ethernet support' CONFIG_BCM57XX $CONFIG_HND
+         dep_tristate '  BCM43xx 802.11 Wireless support' CONFIG_WL $CONFIG_HND
+         if [ "$CONFIG_WL" != "n" ]; then
+            bool '     Wireless Authentication Privacy Infrastructure (WAPI) support' CONFIG_WAPI
+            if [ "$CONFIG_WAPI" != "n" ]; then
+               define_bool CONFIG_MTD_BCMCONF_PARTS y
+            fi
+            choice '    Wireless feature variant' \
+               "ap	CONFIG_WL_USE_AP \
+                ap_sdstd	CONFIG_WL_USE_AP_SDSTD \
+                sta	CONFIG_WL_USE_STA \
+                apsta	CONFIG_WL_USE_APSTA \
+                ap_onchip_g	CONFIG_WL_USE_AP_ONCHIP_G \
+                sta_onchip_g	CONFIG_WL_USE_STA_ONCHIP_G \
+                apsta_onchip_g	CONFIG_WL_USE_APSTA_ONCHIP_G"
+	    bool '    USB/HSIC Wireless Access Point support'	CONFIG_WL_USBAP
+#if defined(WLSRC) || defined(PREBUILD)
+            string '    Config file for basic AP variant' \
+			CONFIG_WL_AP wlconfig_lx_router_ap
+            string '    Config file for basic AP sdstd variant' \
+			CONFIG_WL_AP_SDSTD wlconfig_lx_router_ap_sdstd
+            string '    Config file for basic STA variant' \
+			CONFIG_WL_STA wlconfig_lx_router_sta
+            string '    Config file for basic APSTA variant' \
+			CONFIG_WL_APSTA wlconfig_lx_router_apsta
+            string '    Config file for high part of the split driver' \
+			CONFIG_WL_HIGH wlconfig_lx_router_high
+            string '    Config file for AP 1chipG variant' \
+			CONFIG_WL_AP_ONCHIP_G wlconfig_lx_router_ap_1chipG
+            string '    Config file for STA 1chipG variant' \
+			CONFIG_WL_STA_ONCHIP_G wlconfig_lx_router_sta_1chipG
+            string '    Config file for APSTA 1chipG variant' \
+		 	CONFIG_WL_APSTA_ONCHIP_G wlconfig_lx_router_apsta_1chipG
+#endif
+         fi
+      fi
+   fi
+endmenu

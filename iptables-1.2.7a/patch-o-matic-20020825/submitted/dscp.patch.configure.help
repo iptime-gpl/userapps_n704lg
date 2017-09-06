@@ -1,0 +1,12 @@
+CONFIG_IP_NF_MATCH_TOS
+DSCP match support
+CONFIG_IP_NF_TARGET_DSCP
+  This option adds a `DSCP' match, which allows you to match against
+  the IPv4 header DSCP field (DSCP codepoint).
+
+  The DSCP codepoint can have any value between 0x0 and 0x4f.
+
+  If you want to compile it as a module, say M here and read
+  Documentation/modules.txt.  If unsure, say `N'.
+
+ 

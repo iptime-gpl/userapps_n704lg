@@ -1,0 +1,6 @@
+Author: Harald Welte <laforge@gnumonks.org>
+Status: Pending for kernel inclusion.
+
+This adds CONFIG_IP_NF_MATCH_DSCP option, which allows matching against
+the DSCP (formerly called TOS) field within the IPv4 packet.
+

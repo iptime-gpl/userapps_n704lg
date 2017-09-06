@@ -1,0 +1,589 @@
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux: .cvsignore
+diff -r linux/autoconf.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/autoconf.h
+7a8,9
+> #undef  PRINTK_SIZE_OPTIMIZED
+> #define CONFIG_SIZE_OPTIMIZE 1
+18,20c20
+< #define CONFIG_MODULES 1
+< #undef  CONFIG_MODVERSIONS
+< #undef  CONFIG_KMOD
+---
+> #undef  CONFIG_MODULES
+65c65
+< #define CONFIG_RAM_SIZE (0)
+---
+> #define CONFIG_RAM_SIZE (16)
+69d68
+< #undef  CONFIG_DUAL_IMAGE
+161d159
+< #undef  CONFIG_MTD_BCMCONF_PARTS
+202d199
+< #undef  CONFIG_MTD_NFLASH
+261a259
+> #define CONFIG_QOS_INTERFACE_MARK 1
+269a268,273
+> #define CONFIG_PASSTHROUGH_ALL_CHAIN 1
+> #define CONFIG_IPCONFLICT_DETECT 1
+> #define CONFIG_DRIVERLEVEL_REAL_IPCLONE 1
+> #undef  CONFIG_MULTICAST_FORWARD
+> #undef  CONFIG_LGDACOM_VOIP_QOS
+> #define CONFIG_SMART_QOS_MONITOR 1
+275a280
+> #define CONFIG_SKIP_NETFILTER_HOOK_FOR_MULTICAST 1
+280a286
+> #define CONFIG_FORWARD_SPEED_UP_PATCH 1
+285a292,298
+> #define CONFIG_IP_CONNTRACK_MAX_DEFINE 1
+> #define CONFIG_IP_CONNTRACK_MAX_SIZE (4096)
+> #define CONFIG_IP_CONNTRACK_LIMIT_CONTROL 1
+> #define CONFIG_IP_CONNTRACK_LIMIT_PER_IP 1
+> #define CONFIG_UDP_CONN_MAX_SIZE (4000)
+> #define CONFIG_ICMP_CONN_MAX_SIZE (1000)
+> #undef  CONFIG_ICMP_FRAGMENTATION_DROP
+287d299
+< #define CONFIG_IP_NF_CONNTRACK_MARK 1
+294c306,314
+< #undef  CONFIG_IP_NF_QUEUE
+---
+> #undef  CONFIG_BCM_NAT
+> #define CONFIG_IP_NF_IPSEC 1
+> #define CONFIG_IP_NF_NAT_BNET 1
+> #define CONFIG_NETFILTER_SORIBADA_PATCH 1
+> #undef  CONFIG_IP_NF_PCBOX
+> #undef  CONFIG_IP_NF_SIP_WITH_STUN
+> #undef  CONFIG_IP_NF_MARK2
+> #define CONFIG_IP_NF_NAT_ISPFAKE 1
+> #define CONFIG_IP_NF_QUEUE 1
+297,298c317,319
+< #define CONFIG_IP_NF_MATCH_IPRANGE 1
+< #undef  CONFIG_IP_NF_POOL
+---
+> #define CONFIG_IP_NF_MATCH_STRING 1
+> #define CONFIG_IP_NF_POOL 1
+> #undef  CONFIG_IP_POOL_STATISTICS
+301c322
+< #undef  CONFIG_IP_NF_MATCH_MARK
+---
+> #define CONFIG_IP_NF_MATCH_MARK 1
+304a326
+> #define CONFIG_IP_NF_TARGET_MARK 1
+314d335
+< #define CONFIG_IP_NF_MATCH_CONNMARK 1
+320a342
+> #define CONFIG_IP_NF_TARGET_NETDETECT 1
+325c347
+< #define CONFIG_IP_NF_AUTOFW 1
+---
+> #undef  CONFIG_IP_NF_AUTOFW
+329c351
+< #undef  CONFIG_IP_NF_NAT_LOCAL
+---
+> #define CONFIG_IP_NF_NAT_LOCAL 1
+333,337c355
+< #define CONFIG_IP_NF_MANGLE 1
+< #undef  CONFIG_IP_NF_TARGET_TOS
+< #undef  CONFIG_IP_NF_TARGET_ECN
+< #undef  CONFIG_IP_NF_TARGET_DSCP
+< #undef  CONFIG_IP_NF_TARGET_MARK
+---
+> #undef  CONFIG_IP_NF_MANGLE
+339d356
+< #define CONFIG_IP_NF_TARGET_CONNMARK 1
+341a359,360
+> #undef  CONFIG_IP_NF_TARGET_HAIRPIN
+> #define CONFIG_EMBEDDED_TCP_MSS_PMTU_PATCH 1
+343,349c362,364
+< #define CONFIG_IPV6 1
+< 
+< /*
+<  *   IPv6: Netfilter Configuration
+<  */
+< #undef  CONFIG_IP6_NF_QUEUE
+< #undef  CONFIG_IP6_NF_IPTABLES
+---
+> #define CONFIG_CONNTRACK_STATISTICS 1
+> #define CONFIG_IP_NF_NAT_PORT_RESTRICTED_CONE 1
+> #undef  CONFIG_IPV6
+362,363c377,380
+< #undef  CONFIG_EMF
+< #define CONFIG_EMF_MODULE 1
+---
+> #define CONFIG_BRIDGE_PASSTHROUGH 1
+> #define CONFIG_PORT_BASED_VLAN_FEATURE 1
+> #undef  CONFIG_WC_BRIDGE_TRANSLATION
+> #define CONFIG_EMF 1
+380c397
+< #define CONFIG_NET_SCH_PRIO 1
+---
+> #undef  CONFIG_NET_SCH_PRIO
+385d401
+< #define CONFIG_NET_SCH_TBF_MODULE 1
+440,441c456
+< #undef  CONFIG_ET
+< #define CONFIG_ET_MODULE 1
+---
+> #define CONFIG_ET 1
+443,445d457
+< #undef  CONFIG_BCM_CTF
+< #define CONFIG_BCM_CTF_MODULE 1
+< #define CONFIG_PLC 1
+448,450c460
+< #undef  CONFIG_WL
+< #define CONFIG_WL_MODULE 1
+< #undef  CONFIG_WAPI
+---
+> #define CONFIG_WL 1
+454a465
+> #undef  CONFIG_WL_USE_HIGH
+458d468
+< #undef  CONFIG_WL_USBAP
+517a528
+> #define CONFIG_PPP_MPPE 1
+743c754
+< #define CONFIG_ZLIB_INFLATE 1
+---
+> #undef  CONFIG_ZLIB_INFLATE
+diff -r linux/if_bridge.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/if_bridge.h
+7c7
+<  *	$Id: if_bridge.h,v 1.1.1.1 2012/08/29 05:42:24 bcm5357 Exp $
+---
+>  *	$Id: if_bridge.h,v 1.2 2009/11/05 01:14:06 bcmnew Exp $
+40a41,43
+> #ifdef CONFIG_PORT_BASED_VLAN_FEATURE
+> #define BRCTL_SET_PORT_MAP 30
+> #endif
+85a89,92
+> #ifdef CONFIG_PORT_BASED_VLAN_FEATURE
+> 	__u32 port_map;
+> #endif
+> 
+diff -r linux/kernel.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/kernel.h
+92a93
+> #ifndef PRINTK_SIZE_OPTIMIZED
+94a96,98
+> #else
+> #define printk(...)
+> #endif
+diff -r linux/netdevice.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netdevice.h
+427,431d426
+< #ifdef CONFIG_PLC
+< 	int (*master_hook)(struct sk_buff *skb, struct net_device *dev,
+< 	                   void *master_hook_arg);
+< 	void *master_hook_arg;
+< #endif
+diff -r linux/netfilter.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter.h
+18a19,22
+> #ifdef CONFIG_BCM_NAT
+> #define NF_FAST_NAT 4
+> #define NF_REPEAT 5
+> #else
+19a24
+> #endif
+diff -r linux/netfilter_ipv4/CVS/Repository /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4/CVS/Repository
+1c1
+< broadcom_sdk/bcm_5.110.27.9/src/linux/linux/include/linux/netfilter_ipv4
+---
+> broadcom_sdk/bcm_5.20.64_fullsrc/src/linux/linux.efm/include/linux/netfilter_ipv4
+diff -r linux/netfilter_ipv4/ip_conntrack.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4/ip_conntrack.h
+71a72,77
+> #if defined(CONFIG_IP_NF_IPSEC) || defined(CONFIG_IP_NF_IPSEC_MODULE)
+> #include <linux/netfilter_ipv4/ip_conntrack_ipsec.h>
+> #include <linux/netfilter_ipv4/ip_nat_ipsec.h>
+> #endif
+> 
+> 
+96a103,106
+> #if defined(CONFIG_IP_NF_IPSEC) || defined(CONFIG_IP_NF_IPSEC_MODULE)
+>         struct ip_ct_ipsec_isakmp ct_ipsec_info;
+> #endif
+> 
+106a117,119
+> #if defined(CONFIG_IP_NF_IPSEC) || defined(CONFIG_IP_NF_IPSEC_MODULE)
+>         struct ip_nat_ipsec_esp_info ipsec_esp_info;
+> #endif
+168,172d180
+< #ifdef	HNDCTF
+< #define CTF_FLAGS_CACHED	(1 << 31)	/* Indicates cached connection */
+< #define CTF_FLAGS_EXCLUDED	(1 << 30)
+< #endif
+< 
+222,231c230,232
+< #ifdef HNDCTF
+< 	/* Timeout for the connection */
+< 	unsigned int	expire_jiffies;
+< 
+< 	/* Flags for connection attributes */
+< 	unsigned int	ctf_flags;
+< #endif /* HNDCTF */
+< 
+< #if defined(CONFIG_IP_NF_CONNTRACK_MARK)
+< 	unsigned long mark;
+---
+> #ifdef CONFIG_IP_NF_NAT_PORT_RESTRICTED_CONE
+>                 u_int32_t port_restricted_cone;
+> #define PORT_RESTRICTED_CONE_SKIP 0xFF
+232a234
+> 
+293a296,300
+> #ifdef CONFIG_IP_CONNTRACK_LIMIT_PER_IP
+> int decrease_conntrack_count_per_ip(struct ip_conntrack *ct, int dnat_flag);
+> int increase_conntrack_count_per_ip(struct ip_conntrack *ct);
+> #endif
+> 
+295c302
+< extern int sysctl_ip_conntrack_tcp_timeouts[10];
+---
+> // extern int sysctl_ip_conntrack_tcp_timeouts[10];
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4: ip_conntrack_ipsec.h
+diff -r linux/netfilter_ipv4/ip_conntrack_tuple.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4/ip_conntrack_tuple.h
+30a31,35
+> #if defined(CONFIG_IP_NF_IPSEC) || defined(CONFIG_IP_NF_IPSEC_MODULE)
+>         struct {
+>                 u_int32_t spi;
+>         } esp;
+> #endif
+60a66,70
+> #if defined(CONFIG_IP_NF_IPSEC) || defined(CONFIG_IP_NF_IPSEC_MODULE)
+>                         struct {
+>                                 u_int32_t peer_spi;
+>                         } esp;
+> #endif
+93a104,110
+> #define DUMP_TUPLE_GRE(x)                                               \
+>         DEBUGP("tuple %p: %u %u.%u.%u.%u:0x%08x -> %u.%u.%u.%u:0x%08x\n",\
+>         (x), (x)->dst.protonum,                                         \
+>         NIPQUAD((x)->src.ip), ntohl((x)->src.u.gre.key),                    \
+>         NIPQUAD((x)->dst.ip), ntohl((x)->dst.u.gre.key))
+> 
+> 
+107a125,130
+> 
+> #ifdef CONFIG_CONNTRACK_STATISTICS
+>         unsigned int packets;
+>         unsigned long long bytes;
+> #endif
+> 
+diff -r linux/netfilter_ipv4/ip_nat.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4/ip_nat.h
+113c113
+< 	struct ip_nat_hash bysource, byipsproto, bycone;
+---
+> 	struct ip_nat_hash bysource, byipsproto;
+133a134,138
+> 
+> #ifdef CONFIG_IP_CONNTRACK_LIMIT_PER_IP
+> int check_conntrack_ratio_in_dnat(struct ip_conntrack *ct, const struct ip_nat_multi_range *mr);
+> #endif
+> 
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4: ip_nat_ipsec.h
+diff -r linux/netfilter_ipv4/ip_pool.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4/ip_pool.h
+29a30
+> 
+37a39,42
+> 
+> 	u_int32_t type;
+> #define BITMAP_TYPE 0x1
+> #define ALLIP_TYPE 0x2
+Only in linux/netfilter_ipv4: ipt_CONNMARK.h
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4: ipt_HAIRPIN.h
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4: ipt_NETDETECT.h
+Only in linux/netfilter_ipv4: ipt_cone.h
+Only in linux/netfilter_ipv4: ipt_connmark.h
+Only in linux/netfilter_ipv4: ipt_iprange.h
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4: ipt_string.h
+diff -r linux/netfilter_ipv4.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/netfilter_ipv4.h
+38d37
+< #define NFC_IP_CONE_NAT_ALTERED	0x1000
+diff -r linux/pagemap.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/pagemap.h
+62c62
+< static inline unsigned long _page_hashfn(struct address_space * mapping, unsigned long indx)
+---
+> static inline unsigned long _page_hashfn(struct address_space * mapping, unsigned long index)
+66c66
+< 	return s(i+indx) & (PAGE_HASH_SIZE-1);
+---
+> 	return s(i+index) & (PAGE_HASH_SIZE-1);
+74c74
+< 				unsigned long indx, struct page **hash);
+---
+> 				unsigned long index, struct page **hash);
+78c78
+< 				unsigned long indx, struct page **hash);
+---
+> 				unsigned long index, struct page **hash);
+80c80
+< 				unsigned long indx, unsigned int gfp_mask);
+---
+> 				unsigned long index, unsigned int gfp_mask);
+88,90c88,90
+< extern void add_to_page_cache(struct page * page, struct address_space *mapping, unsigned long indx);
+< extern void add_to_page_cache_locked(struct page * page, struct address_space *mapping, unsigned long indx);
+< extern int add_to_page_cache_unique(struct page * page, struct address_space *mapping, unsigned long indx, struct page **hash);
+---
+> extern void add_to_page_cache(struct page * page, struct address_space *mapping, unsigned long index);
+> extern void add_to_page_cache_locked(struct page * page, struct address_space *mapping, unsigned long index);
+> extern int add_to_page_cache_unique(struct page * page, struct address_space *mapping, unsigned long index, struct page **hash);
+103c103
+< static inline struct page *grab_cache_page(struct address_space *mapping, unsigned long indx)
+---
+> static inline struct page *grab_cache_page(struct address_space *mapping, unsigned long index)
+105c105
+< 	return find_or_create_page(mapping, indx, mapping->gfp_mask);
+---
+> 	return find_or_create_page(mapping, index, mapping->gfp_mask);
+diff -r linux/pci.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/pci.h
+2c2
+<  *	$Id: pci.h,v 1.1.1.1 2012/08/29 05:42:24 bcm5357 Exp $
+---
+>  *	$Id: pci.h,v 1.1.1.1 2009/10/06 04:34:36 bcmnew Exp $
+481c481
+< 	const char *name;
+---
+> 	char *name;
+526c526
+< int pcibios_find_class (unsigned int class_code, unsigned short indx, unsigned char *bus, unsigned char *dev_fn);
+---
+> int pcibios_find_class (unsigned int class_code, unsigned short index, unsigned char *bus, unsigned char *dev_fn);
+528c528
+< 			 unsigned short indx, unsigned char *bus,
+---
+> 			 unsigned short index, unsigned char *bus,
+743a744,749
+> /*
+>  *  The world is not perfect and supplies us with broken PCI devices.
+>  *  For at least a part of these bugs we need a work-around, so both
+>  *  generic (drivers/pci/quirks.c) and per-architecture code can define
+>  *  fixup hooks to be called for particular buggy devices.
+>  */
+diff -r linux/ppp-comp.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/ppp-comp.h
+27c27
+<  * $Id: ppp-comp.h,v 1.1.1.1 2012/08/29 05:42:24 bcm5357 Exp $
+---
+>  * $Id: ppp-comp.h,v 1.3 2009/11/05 01:29:42 bcmnew Exp $
+81c81
+< 			      unsigned char *obuf, int isize, int osize);
+---
+> 			     unsigned char *obuf, int isize, int osize);
+102c102
+< 				unsigned char *obuf, int osize);
+---
+> 			       unsigned char *obuf, int osize);
+189a190,310
+>  * Definitions for MPPE.
+>  */
+> 
+> #define CI_MPPE			18	/* config option for MPPE */
+> #define CILEN_MPPE		6	/* length of config option */
+> 
+> #define MPPE_PAD		4	/* MPPE growth per frame */
+> #define MPPE_MAX_KEY_LEN	16	/* largest key length (128-bit) */
+> 
+> /* option bits for ccp_options.mppe */
+> #define MPPE_OPT_40		0x01	/* 40 bit */
+> #define MPPE_OPT_128		0x02	/* 128 bit */
+> #define MPPE_OPT_STATEFUL	0x04	/* stateful mode */
+> /* unsupported opts */
+> #define MPPE_OPT_56		0x08	/* 56 bit */
+> #define MPPE_OPT_MPPC		0x10	/* MPPC compression */
+> #define MPPE_OPT_D		0x20	/* Unknown */
+> #define MPPE_OPT_UNSUPPORTED (MPPE_OPT_56|MPPE_OPT_MPPC|MPPE_OPT_D)
+> #define MPPE_OPT_UNKNOWN	0x40	/* Bits !defined in RFC 3078 were set */
+> 
+> /*
+>  * This is not nice ... the alternative is a bitfield struct though.
+>  * And unfortunately, we cannot share the same bits for the option
+>  * names above since C and H are the same bit.  We could do a u_int32
+>  * but then we have to do a htonl() all the time and/or we still need
+>  * to know which octet is which.
+>  */
+> #define MPPE_C_BIT		0x01	/* MPPC */
+> #define MPPE_D_BIT		0x10	/* Obsolete, usage unknown */
+> #define MPPE_L_BIT		0x20	/* 40-bit */
+> #define MPPE_S_BIT		0x40	/* 128-bit */
+> #define MPPE_M_BIT		0x80	/* 56-bit, not supported */
+> #define MPPE_H_BIT		0x01	/* Stateless (in a different byte) */
+> 
+> /* Does not include H bit; used for least significant octet only. */
+> #define MPPE_ALL_BITS (MPPE_D_BIT|MPPE_L_BIT|MPPE_S_BIT|MPPE_M_BIT|MPPE_H_BIT)
+> 
+> /* Build a CI from mppe opts (see RFC 3078) */
+> #define MPPE_OPTS_TO_CI(opts, ci)		\
+>     do {					\
+> 	u_char *ptr = ci; /* u_char[4] */	\
+> 						\
+> 	/* H bit */				\
+> 	if (opts & MPPE_OPT_STATEFUL)		\
+> 	    *ptr++ = 0x0;			\
+> 	else					\
+> 	    *ptr++ = MPPE_H_BIT;		\
+> 	*ptr++ = 0;				\
+> 	*ptr++ = 0;				\
+> 						\
+> 	/* S,L bits */				\
+> 	*ptr = 0;				\
+> 	if (opts & MPPE_OPT_128)		\
+> 	    *ptr |= MPPE_S_BIT;			\
+> 	if (opts & MPPE_OPT_40)			\
+> 	    *ptr |= MPPE_L_BIT;			\
+> 	/* M,D,C bits not supported */		\
+>     } while (/* CONSTCOND */ 0)
+> 
+> /* The reverse of the above */
+> #define MPPE_CI_TO_OPTS(ci, opts)		\
+>     do {					\
+> 	u_char *ptr = ci; /* u_char[4] */	\
+> 						\
+> 	opts = 0;				\
+> 						\
+> 	/* H bit */				\
+> 	if (!(ptr[0] & MPPE_H_BIT))		\
+> 	    opts |= MPPE_OPT_STATEFUL;		\
+> 						\
+> 	/* S,L bits */				\
+> 	if (ptr[3] & MPPE_S_BIT)		\
+> 	    opts |= MPPE_OPT_128;		\
+> 	if (ptr[3] & MPPE_L_BIT)		\
+> 	    opts |= MPPE_OPT_40;		\
+> 						\
+> 	/* M,D,C bits */			\
+> 	if (ptr[3] & MPPE_M_BIT)		\
+> 	    opts |= MPPE_OPT_56;		\
+> 	if (ptr[3] & MPPE_D_BIT)		\
+> 	    opts |= MPPE_OPT_D;			\
+> 	if (ptr[3] & MPPE_C_BIT)		\
+> 	    opts |= MPPE_OPT_MPPC;		\
+> 						\
+> 	/* Other bits */			\
+> 	if (ptr[0] & ~MPPE_H_BIT)		\
+> 	    opts |= MPPE_OPT_UNKNOWN;		\
+> 	if (ptr[1] || ptr[2])			\
+> 	    opts |= MPPE_OPT_UNKNOWN;		\
+> 	if (ptr[3] & ~MPPE_ALL_BITS)		\
+> 	    opts |= MPPE_OPT_UNKNOWN;		\
+>     } while (/* CONSTCOND */ 0)
+> 
+> /* MPPE/MPPC definitions by J.D.*/
+> #define MPPE_STATELESS          MPPE_H_BIT	/* configuration bit H */
+> #define MPPE_40BIT              MPPE_L_BIT	/* configuration bit L */
+> #define MPPE_56BIT              MPPE_M_BIT	/* configuration bit M */
+> #define MPPE_128BIT             MPPE_S_BIT	/* configuration bit S */
+> #define MPPE_MPPC               MPPE_C_BIT	/* configuration bit C */
+> 
+> /*
+>  * Definitions for Stac LZS.
+>  */
+> 
+> #define CI_LZS			17	/* config option for Stac LZS */
+> #define CILEN_LZS		5	/* length of config option */
+> 
+> #define LZS_OVHD		4	/* max. LZS overhead */
+> #define LZS_HIST_LEN		2048	/* LZS history size */
+> #define LZS_MAX_CCOUNT		0x0FFF	/* max. coherency counter value */
+> 
+> #define LZS_MODE_NONE		0
+> #define LZS_MODE_LCB		1
+> #define LZS_MODE_CRC		2
+> #define LZS_MODE_SEQ		3
+> #define LZS_MODE_EXT		4
+> 
+> #define LZS_EXT_BIT_FLUSHED	0x80	/* bit A */
+> #define LZS_EXT_BIT_COMP	0x20	/* bit C */
+> 
+> /*
+diff -r linux/serio.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/serio.h
+5c5
+<  * $Id: serio.h,v 1.1.1.1 2012/08/29 05:42:24 bcm5357 Exp $
+---
+>  * $Id: serio.h,v 1.1.1.1 2009/10/06 04:34:36 bcmnew Exp $
+diff -r linux/sockios.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/sockios.h
+128a129
+> #define SIOCDEVPRIVATE_EFM      0x89C0  /* to 89DF */
+diff -r linux/squashfs_fs_sb.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/squashfs_fs_sb.h
+70c70
+<                                 indx, int readahead_blks, char *block_list, \
+---
+>                                 index, int readahead_blks, char *block_list, \
+diff -r linux/sysctl.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/sysctl.h
+209a210,212
+> #ifdef CONFIG_MULTICAST_FORWARD
+> 	,NET_CORE_MULTICAST_FORWARD=18
+> #endif
+235a239
+> 	NET_IPV4_NETFILTER=20,
+295a300,308
+> #ifdef CONFIG_FORWARD_SPEED_UP_PATCH
+>         ,NET_FORWARD_SPEED_UP_FLAG=92
+> #endif
+> #ifdef CONFIG_PASSTHROUGH_ALL_CHAIN
+>         ,NET_NAT_PASSTHROUGH=93
+> #endif
+> #if defined(CONFIG_IP_NF_NAT_ISPFAKE) || defined(CONFIG_IP_NF_NAT_ISPFAKE_MODULE)
+> 	,NET_TCP_MSS_ISPFAKE=94
+> #endif
+343a357,376
+> /* /proc/sys/net/ipv4/netfilter */
+> enum
+> {
+>         NET_IPV4_NF_CONNTRACK_MAX=1,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_SYN_SENT=2,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_SYN_RECV=3,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_ESTABLISHED=4,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_FIN_WAIT=5,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_CLOSE_WAIT=6,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_LAST_ACK=7,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_TIME_WAIT=8,
+>         NET_IPV4_NF_CONNTRACK_TCP_TIMEOUT_CLOSE=9,
+>         NET_IPV4_NF_CONNTRACK_UDP_TIMEOUT=10,
+>         NET_IPV4_NF_CONNTRACK_UDP_TIMEOUT_STREAM=11,
+>         NET_IPV4_NF_CONNTRACK_ICMP_TIMEOUT=12,
+>         NET_IPV4_NF_CONNTRACK_GENERIC_TIMEOUT=13,
+>         NET_IPV4_NF_CONNTRACK_BUCKETS=14,
+> };
+> 
+> 
+diff -r linux/usb.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/include/linux/usb.h
+486,491d485
+< #define USB_QTD_CACHED		0x2000	// For EHCI_QTD_CACHE only!
+< 
+< #define EHCI_QTD_CACHE
+< //#define EHCI_QTDC_DEBUG
+< #define EHCI_QUIRK_FIX
+< 
+661c655
+< 					 usb_complete_t complt,
+---
+> 					 usb_complete_t complete,
+670c664
+< 	urb->complete = complt;
+---
+> 	urb->complete = complete;
+692c686
+< 				      usb_complete_t complt,
+---
+> 				      usb_complete_t complete,
+701c695
+< 	urb->complete = complt;
+---
+> 	urb->complete = complete;
+724c718
+< 				     usb_complete_t complt,
+---
+> 				     usb_complete_t complete,
+733c727
+< 	urb->complete = complt;
+---
+> 	urb->complete = complete;
+798,799d791
+< 
+< 	struct pci_dev *controller;	/* Field added for compatibility with 2.6, so dma_pool_alloc is easy to implement */
+903c895
+< extern int usb_control_msg(struct usb_device *dev, unsigned int pipe, __u8 request, __u8 requesttype, __u16 value, __u16 indx, void *data, __u16 size, int timeout);
+---
+> extern int usb_control_msg(struct usb_device *dev, unsigned int pipe, __u8 request, __u8 requesttype, __u16 value, __u16 index, void *data, __u16 size, int timeout);
+1067c1059
+< int usb_string(struct usb_device *dev, int indx, char *buf, size_t size);
+---
+> int usb_string(struct usb_device *dev, int index, char *buf, size_t size);
+1082c1074
+< void usb_show_string(struct usb_device *dev, char *id, int indx);
+---
+> void usb_show_string(struct usb_device *dev, char *id, int index);

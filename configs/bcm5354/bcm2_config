@@ -1,0 +1,68 @@
+PROJECT_ID := bcm2
+# BOOTLOADER_DIR := bootloader_32bit_16MB
+
+include $(USERAPPS_ROOT)/configs/bcm5354/menu_wireless_router_bcm
+include $(USERAPPS_ROOT)/configs/bcm5354/common_config
+include $(USERAPPS_ROOT)/configs/bcm5354/apps_config
+-include $(USERAPPS_ROOT)/lang_config
+
+REAL_KERNEL_PATH:=../bcm_4.151.10.22/src/linux/linux
+BUSYBOX_DIR:=busybox.bcm
+
+CPU_ID:=bcm5354
+
+
+IF_LAN_PHY:=\"eth0\"
+IF_LOCAL:=\"br0\"
+IF_WIRELESS:=\"eth1\"
+IF_WWAN:=\"eth1\"
+
+# dummy
+IF_WAN2:=\"eth2\"
+
+IF_WIRELESS_5G:=\"eth2\"
+
+IF_WIRELESS_PREFIX:=\"wl0\"
+IF_WIRELESS_5G_PREFIX:=\"wl1\"
+
+USE_CHECK_RESET_SYSD:=y
+USE_NO_HW_RESET:=y
+USE_HOST_SCAN:=y
+
+USE_IGMP_PROXY:=y
+USE_SHRINK_MEM:=y
+USE_SMART_QOS:=y
+
+USE_LED_SILENT_CONTROL:=y
+USE_ADMIN_EMAIL:=y
+USE_UI2:=y
+USE_SAVE_INFO:=n
+WIRELESS_SSID_TEST_DUP:=y
+USE_WPS_NOTIFICATION:=n
+
+USE_COEX_OPTION:=y
+
+USE_NEW_MAC_SCHEME:=y
+-include $(USERAPPS_ROOT)/misc_config
+
+ifeq ($(USE_BCM5357),y)
+IF_WAN:=\"vlan2\"
+IF_LAN:=\"vlan1\"
+IF_WAN_VIDX:=\"2\"
+IF_LAN_VIDX:=\"1\"
+else
+IF_WAN:=\"vlan1\"
+IF_LAN:=\"vlan2\"
+IF_WAN_VIDX:=\"1\"
+IF_LAN_VIDX:=\"2\"
+endif
+
+
+#ifeq ($(KOREAN_SUPPORT),)
+#USE_PLANTYNET:=y
+#endif
+
+USE_FIRMARCH_V1:=y
+USE_VCONFIG:=y
+
+USE_DOWNGRADE_VESION_PATCH:=y

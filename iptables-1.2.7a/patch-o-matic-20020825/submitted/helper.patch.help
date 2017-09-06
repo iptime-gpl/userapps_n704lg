@@ -1,0 +1,15 @@
+Author: Martin Josefsson <gandalf@wlug.westbo.se>,
+	Harald Welte <laforge@gnumonks.org>
+Status: Pending for inclusion after newnat
+
+This patch adds the ipt_helper module which is a new match
+for iptables. This adds the capability to match packets in a
+dynamically allocated connection that's related to a specific 
+conntrack helper.
+
+If you want to match all packets belonging to ftp data sessions:
+(only data connections, no control connections)
+
+iptables -A INPUT -m helper --helper ftp -j ACCEPT
+
+use irc for irc-dcc-sessions.

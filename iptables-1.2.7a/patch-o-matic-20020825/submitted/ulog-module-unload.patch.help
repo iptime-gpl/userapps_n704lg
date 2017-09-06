@@ -1,0 +1,6 @@
+Author: Harald Welte <laforge@gnumonks.org>
+Status: Submitted for kernel inclusion at 2.4.19-pre6 time
+
+This fixes a bug which can potentially cause a kernel Oops to happen when
+you unload the ipt_ULOG module.
+

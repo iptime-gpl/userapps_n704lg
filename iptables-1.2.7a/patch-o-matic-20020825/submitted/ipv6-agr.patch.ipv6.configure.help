@@ -1,0 +1,9 @@
+CONFIG_IP6_NF_MATCH_MAC
+EUI64 address check (EXPERIMENTAL)
+CONFIG_IP6_NF_MATCH_EUI64
+  This module performs checking on the IPv6 source address
+  Compares the last 64 bits with the EUI64 (delivered
+  from the MAC address) address
+
+  If you want to compile it as a module, say M here and read
+  Documentation/modules.txt.  If unsure, say `N'.

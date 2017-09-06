@@ -1,0 +1,251 @@
+diff -r core/Makefile /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/Makefile
+12c12
+< export-objs := netfilter.o profile.o
+---
+> export-objs := netfilter.o profile.o devutil.o
+14c14
+< obj-y := sock.o skbuff.o iovec.o datagram.o scm.o
+---
+> obj-y := sock.o skbuff.o iovec.o datagram.o scm.o devutil.o
+Binary files core/core.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/core.o differ
+Binary files core/datagram.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/datagram.o differ
+diff -r core/dev.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/dev.c
+111,112c111,125
+< #include <typedefs.h>
+< #include <bcmdefs.h>
+---
+> #if defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE) || defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE_MODULE)
+> void (*twinip_rx_handler)(struct sk_buff *skb) = NULL;
+> void (*twinip_tx_handler)(struct sk_buff *skb, char *ifname) = NULL;
+> #endif
+> #if defined(CONFIG_MULTICAST_FORWARD) || defined(CONFIG_MULTICAST_FORWARD_MODULE)
+> int (*multicast_forward_handler)(struct sk_buff *skb, struct net_device *rxdev) = NULL;
+> #endif
+> 
+> #ifdef CONFIG_LGDACOM_VOIP_QOS
+> extern void (*lgdacom_voip_qos_mon_callback)(struct sk_buff *skb);
+> #endif
+> 
+> #if defined(CONFIG_SMART_QOS_MONITOR) || defined(CONFIG_SMART_QOS_MONITOR_MODULE)
+> void (*smart_qos_mon_callback)(struct sk_buff *skb) = NULL;
+> #endif
+994,995c1007
+< int BCMFASTPATH
+< dev_queue_xmit(struct sk_buff *skb)
+---
+> int dev_queue_xmit(struct sk_buff *skb)
+998a1011,1041
+> #ifdef CONFIG_LGDACOM_VOIP_QOS
+>         struct iphdr *iph = skb->nh.iph;
+> #endif
+> #if defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE) || defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE_MODULE)
+>         struct net_device *old_dev = skb->dev;
+> #endif
+> 
+> #ifdef CONFIG_BRIDGE_PASSTHROUGH
+> #if	0
+>         if(!strcmp(dev->name,"br0"))
+>         {
+>                 struct net_device *new_dev;
+> 
+>                 new_dev = br_fast_fdb_compare(skb);
+>                 if(new_dev)
+>                 {
+>                         skb->dev = new_dev;
+>                         dev = skb->dev;
+> 			
+>                 }
+> 
+>         }
+> #endif
+> #endif
+> 
+> #if	0
+> 	printk(" skb->dev->name : %s\n", skb->dev->name );
+> 	printk(" head <---> data : %d\n",  skb->data - skb->head );
+> 	print_packet( skb->head, 64 );
+> 	printk("\n");
+> #endif
+1028a1072,1075
+> #if defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE) || defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE_MODULE)
+>         if(twinip_tx_handler) twinip_tx_handler(skb, old_dev->name);
+> #endif
+> 
+1031a1079,1085
+> 
+> #ifdef CONFIG_LGDACOM_VOIP_QOS
+>         if (lgdacom_voip_qos_mon_callback && (iph->tos >> 2) == 0x2e) { // 0x2e : VOIP DSCP value
+>                 ; // skip queue
+>         } else
+> #endif
+> 
+1233a1288,1321
+> #ifdef CONFIG_BRIDGE_PASSTHROUGH
+> struct net_device *br_dev;
+> 
+> inline unsigned short eth_type_trans_with_tag(struct sk_buff *skb, struct net_device *dev)
+> {
+>         struct ethhdr *eth;
+>         unsigned short *raw_type, type;
+> 
+> 	raw_type = (unsigned short *)&skb->data[2];
+> 	type = ntohs(*raw_type);
+> 	if(type == ETH_P_IP)
+> 	{
+> 		skb->pkt_type=PACKET_HOST;
+>         	skb_pull(skb, 4);
+> 		skb->protocol = htons(type);
+> 		skb->dev = dev;
+> 		return type;
+> 	}
+> 
+> 	return -1;
+> }
+> 
+> int print_packet(unsigned char *packet , int size )
+> {
+> 	int i;
+> 
+> 	for( i = 0 ; i < size; i++ )
+> 	{
+> 		if( !(i % 16)) printk("\n");
+> 		printk("%02x ", packet[i]);
+> 	}
+> }
+> 
+> #endif
+1252a1341,1361
+> 
+> #ifdef CONFIG_BRIDGE_PASSTHROUGH
+> 	if(!br_dev && !strcmp(skb->dev->name,"br0")) br_dev = skb->dev;
+> 
+> 	if(
+> 		br_dev 
+> 	    	&& !strcmp(skb->dev->name,"eth0")
+> 		&& skb->mac.raw[12] == 0x81	// vlan tag for distingushing LAN and WAN
+> 		&& skb->mac.raw[13] == 0x0
+> 		&& skb->mac.raw[14] == 0x0
+> 		&& skb->mac.raw[15] == 0x0
+> 		&& !memcmp(skb->mac.raw, br_dev->dev_addr, ETH_ALEN)
+> 	)
+> 	{
+> 	//	print_packet(skb->data-14,32);
+> 		/* packet from wired lan */ 
+> 		eth_type_trans_with_tag(skb,br_dev);
+> 	}
+> #endif
+> 
+> 
+1258a1368
+> 
+1437a1548,1549
+> 	struct net_device *rx_dev;
+> 
+1441a1554
+> 	rx_dev = skb->dev;
+1473a1587,1606
+> #if defined(CONFIG_MULTICAST_FORWARD) || defined(CONFIG_MULTICAST_FORWARD_MODULE)
+>         if (multicast_forward_handler)
+>         {
+>                 if(multicast_forward_handler(skb,rx_dev))
+>                         return NET_RX_SUCCESS;
+>         }
+> #endif
+> #ifdef CONFIG_LGDACOM_VOIP_QOS
+>         if (lgdacom_voip_qos_mon_callback && !strcmp(rx_dev->name,"br0"))
+>                 lgdacom_voip_qos_mon_callback(skb);
+> #endif
+> 
+> #if defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE) || defined(CONFIG_DRIVERLEVEL_REAL_IPCLONE_MODULE)
+>         if(twinip_rx_handler) twinip_rx_handler(skb);
+> #endif
+> 
+> #if defined(CONFIG_SMART_QOS_MONITOR) || defined(CONFIG_SMART_QOS_MONITOR_MODULE)
+> 	if(smart_qos_mon_callback) smart_qos_mon_callback(skb);
+> #endif
+> 
+1534d1666
+< 
+2161a2294,2295
+> 			    (cmd >= SIOCDEVPRIVATE_EFM &&
+> 			    cmd <= (SIOCDEVPRIVATE_EFM + 15) && strlen(ifr->ifr_name)) ||
+2337,2338c2471,2473
+< 			if (cmd >= SIOCDEVPRIVATE &&
+< 			    cmd <= SIOCDEVPRIVATE + 15) {
+---
+> 			if ((cmd >= SIOCDEVPRIVATE && cmd <= SIOCDEVPRIVATE + 15) || 
+> 			    (cmd >= SIOCDEVPRIVATE_EFM && cmd <= (SIOCDEVPRIVATE_EFM + 15) && strlen(ifr.ifr_name)))
+> 			    {
+Binary files core/dev.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/dev.o differ
+Binary files core/dev_mcast.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/dev_mcast.o differ
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core: devutil.c
+Only in /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core: devutil.o
+Binary files core/dst.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/dst.o differ
+Binary files core/iovec.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/iovec.o differ
+Binary files core/neighbour.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/neighbour.o differ
+diff -r core/netfilter.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/netfilter.c
+361a362,365
+> #ifdef CONFIG_BCM_NAT
+> 		case NF_FAST_NAT:
+> 			return NF_FAST_NAT;
+> #endif
+447a452,456
+> #ifdef CONFIG_BCM_NAT
+> typedef int (*bcmNatHitHook)(struct sk_buff *skb);
+> extern bcmNatHitHook bcm_nat_hit_hook;
+> #endif
+> 
+497a507,519
+> #ifdef CONFIG_BCM_NAT
+> 	case NF_FAST_NAT:
+> 		if (bcm_nat_hit_hook)
+> 		{
+> 			ret = bcm_nat_hit_hook(skb);
+> 		}
+> 		else
+> 		{
+> 			kfree_skb(skb);
+> 			ret = -EPERM;
+> 		}
+> 		break;	
+> #endif
+583a606
+> #if	0
+593a617
+> #endif
+Binary files core/netfilter.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/netfilter.o differ
+diff -r core/pktgen.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/pktgen.c
+2c2
+<  * $Id: pktgen.c,v 1.1 2012/08/29 05:45:07 bcm5357 Exp $
+---
+>  * $Id: pktgen.c,v 1.1.1.1 2009/10/06 04:34:35 bcmnew Exp $
+Binary files core/rtnetlink.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/rtnetlink.o differ
+Binary files core/scm.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/scm.o differ
+diff -r core/skbuff.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/skbuff.c
+7c7
+<  *	Version:	$Id: skbuff.c,v 1.1 2012/08/29 05:45:07 bcm5357 Exp $
+---
+>  *	Version:	$Id: skbuff.c,v 1.2 2009/11/05 01:20:30 bcmnew Exp $
+64a65,69
+> #undef printk
+> asmlinkage int printk(const char * fmt, ...)
+> 	                __attribute__ ((format (printf, 1, 2)));
+> 
+> 
+252d256
+< 	skb->__unused = 0;
+402d405
+< 	C(__unused);
+Binary files core/skbuff.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/skbuff.o differ
+diff -r core/sock.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/sock.c
+10c10
+<  * Version:	$Id: sock.c,v 1.1 2012/08/29 05:45:07 bcm5357 Exp $
+---
+>  * Version:	$Id: sock.c,v 1.1.1.1 2009/10/06 04:34:35 bcmnew Exp $
+295c295
+< #if (BITS_PER_LONG == 32)
+---
+> #if BITS_PER_LONG == 32
+Binary files core/sock.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/sock.o differ
+Binary files core/sysctl_net_core.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/sysctl_net_core.o differ
+Binary files core/utils.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/core/utils.o differ

@@ -1,0 +1,28 @@
+CROSS = mipsel-uclibc-
+CC = $(CROSS)gcc
+LD = $(CROSS)gcc
+AR = $(CROSS)ar
+RANLIB = $(CROSS)ranlib
+STRIPTOOL = $(CROSS)strip
+STRIP    = $(STRIPTOOL) --remove-section=.note --remove-section=.comment
+UPNP_TARGET = mipsel-uclibc
+
+include $(USERAPPS_ROOT)/config
+include $(USERAPPS_ROOT)/cflags.mk
+LDFLAGS:=
+
+KERNEL_PATH := $(USERAPPS_ROOT)/linux
+
+ifeq ($(USE_NEW_LIB),y)
+# USERLAND_LIB := $(USERAPPS_ROOT)/lib/ul_lib/userland.a
+USERLAND_LIB := -L$(USERAPPS_ROOT)/lib/ul_lib -luserland
+# CGI_LIB := $(USERAPPS_ROOT)/lib/libtimecgi.a $(USERLAND_LIB)
+CGI_LIB := -L$(USERAPPS_ROOT)/lib/ul_lib -L$(USERAPPS_ROOT)/lib -lcgi -luserland -lcrypt
+else
+CGI_LIB := $(USERAPPS_ROOT)/cgi-src/lib/libtimecgi.a -lm
+USERLAND_LIB := $(CGI_LIB)
+endif
+
+#CGI_LIB += $(USERAPPS_ROOT)/bcmapp/bcmapi/bcmapi.a
+CGI_LIB += -L$(USERAPPS_ROOT)/bcmapp/install/usr/lib -lnvram -lshared -lbcm
+# -lbcmapi

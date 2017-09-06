@@ -1,0 +1,6 @@
+Author: David Miller <davem@redhat.com>
+Status: Included in kernel 2.4.19-pre4
+
+This adds generic arptables as well as arptable_filter support into the kernel.
+The patch needs netfilter-arp.patch to work...
+

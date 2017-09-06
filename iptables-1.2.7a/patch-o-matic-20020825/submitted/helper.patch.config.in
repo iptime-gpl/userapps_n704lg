@@ -1,0 +1,4 @@
+  dep_tristate '  tcpmss match support' CONFIG_IP_NF_MATCH_TCPMSS $CONFIG_IP_NF_IPTABLES
+  if [ "$CONFIG_IP_NF_CONNTRACK" != "n" ]; then
+    dep_tristate '  Helper match support' CONFIG_IP_NF_MATCH_HELPER $CONFIG_IP_NF_IPTABLES
+  fi

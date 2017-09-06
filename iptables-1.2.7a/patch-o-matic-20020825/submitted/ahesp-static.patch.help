@@ -1,0 +1,5 @@
+Author: Paul P Komkoff Jr <i@stingr.net>
+Status: working
+
+Make the init and fini functions of ipt_ah.c static.
+

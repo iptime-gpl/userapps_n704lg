@@ -1,0 +1,9 @@
+Author: Henrik Nordstrom <hno@marasystems.com>
+Status: working
+
+Don't copy the nfmark value of the old packet into the new RST
+packet when rejecting with TCP resets.
+
+ip_route_output is not smart enough to know about nfmark routing,
+and having the mark value set from start prevents mangle OUTPUT
+from rerouting the packet later..

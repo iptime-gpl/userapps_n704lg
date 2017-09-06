@@ -1,0 +1,10 @@
+--- linux-uml/net/ipv4/netfilter/ipt_REJECT.c.orig	Wed Jun 12 18:54:48 2002
++++ linux-uml/net/ipv4/netfilter/ipt_REJECT.c	Wed Jun 12 18:54:52 2002
+@@ -74,6 +74,7 @@
+ #ifdef CONFIG_NETFILTER_DEBUG
+ 	nskb->nf_debug = 0;
+ #endif
++	nskb->nfmark = 0;
+ 
+ 	tcph = (struct tcphdr *)((u_int32_t*)nskb->nh.iph + nskb->nh.iph->ihl);
+ 

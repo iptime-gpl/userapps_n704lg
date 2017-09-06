@@ -1,0 +1,29 @@
+PROJECT_ID := bcm
+# BOOTLOADER_DIR := bootloader_32bit_16MB
+
+include $(USERAPPS_ROOT)/configs/bcm5354/menu_wireless_router_bcm
+include $(USERAPPS_ROOT)/configs/bcm5354/common_config
+include $(USERAPPS_ROOT)/configs/bcm5354/apps_config
+-include $(USERAPPS_ROOT)/lang_config
+
+REAL_KERNEL_PATH:=../bcm_4.151.10.22/src/linux/linux
+BUSYBOX_DIR:=busybox.bcm
+
+CPU_ID:=bcm5354
+IF_WAN:=\"eth0\"
+IF_LAN:=\"vlan0\"
+IF_LAN_PHY:=\"eth0\"
+IF_LOCAL:=\"br0\"
+IF_WIRELESS:=\"eth1\"
+
+# dummy
+IF_WAN2:=\"eth2\"
+USE_WIRELESS_MULTICAST_FILTERING:=y
+USE_NO_WIRED_IGMP_SNOOPING:=y
+BRCM_SDK_VERSION:="4.151.10.22"
+USE_LED_SILENT_CONTROL:=y
+USE_UI2:=y
+USE_SAVE_INFO:=n
+WIRELESS_SSID_TEST_DUP:=y
+
+-include $(USERAPPS_ROOT)/misc_config

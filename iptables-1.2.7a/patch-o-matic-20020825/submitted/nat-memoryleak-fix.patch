@@ -1,0 +1,9 @@
+diff -Nru linux-2.4.19-pre8-plain/net/ipv4/netfilter/ip_nat_core.c linux-2.4.19-pre8-leakfix/net/ipv4/netfilter/ip_nat_core.c
+--- linux-2.4.19-pre8-plain/net/ipv4/netfilter/ip_nat_core.c	Sun May 26 16:42:53 2002
++++ linux-2.4.19-pre8-leakfix/net/ipv4/netfilter/ip_nat_core.c	Tue Jun 11 10:29:17 2002
+@@ -920,4 +920,5 @@
+ {
+ 	ip_ct_selective_cleanup(&clean_nat, NULL);
+ 	ip_conntrack_destroyed = NULL;
++	vfree(bysource);
+ }

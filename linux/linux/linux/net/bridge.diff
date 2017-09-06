@@ -1,0 +1,381 @@
+diff -r bridge/br_fdb.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_fdb.c
+8c8
+<  *	$Id: br_fdb.c,v 1.1.1.1 2012/08/29 05:42:22 bcm5357 Exp $
+---
+>  *	$Id: br_fdb.c,v 1.2 2009/11/05 01:14:16 bcmnew Exp $
+22,115d21
+< #ifdef HNDCTF
+< #include <linux/if.h>
+< #include <linux/if_vlan.h>
+< #include <typedefs.h>
+< #include <osl.h>
+< #include <ctf/hndctf.h>
+< 
+< static void
+< br_brc_init(ctf_brc_t *brc, unsigned char *ea, struct net_device *rxdev)
+< {
+< 	memset(brc, 0, sizeof(ctf_brc_t));
+< 
+< 	memcpy(brc->dhost.octet, ea, ETH_ALEN);
+< 
+<         if (rxdev->priv_flags & IFF_802_1Q_VLAN) {
+< 		brc->txifp = (void *)(VLAN_DEV_INFO(rxdev)->real_dev);
+< 		brc->vid = VLAN_DEV_INFO(rxdev)->vlan_id;
+< 		brc->action = ((VLAN_DEV_INFO(rxdev)->flags & 1) ?
+< 		                     CTF_ACTION_TAG : CTF_ACTION_UNTAG);
+< 	} else {
+< 		brc->txifp = (void *)rxdev;
+< 		brc->action = CTF_ACTION_UNTAG;
+< 	}
+< 
+< #ifdef DEBUG
+< 	printk("mac %02x:%02x:%02x:%02x:%02x:%02x\n",
+< 	       brc->dhost.octet[0], brc->dhost.octet[1],
+< 	       brc->dhost.octet[2], brc->dhost.octet[3],
+< 	       brc->dhost.octet[4], brc->dhost.octet[5]);
+< 	printk("vid: %d action %x\n", brc->vid, brc->action);
+< 	printk("txif: %s\n", ((struct net_device *)brc->txifp)->name);
+< #endif
+< 
+< 	return;
+< }
+< 
+< /*
+<  * Add bridge cache entry.
+<  */
+< void
+< br_brc_add(unsigned char *ea, struct net_device *rxdev)
+< {
+< 	ctf_brc_t brc_entry;
+< 
+< 	/* Add brc entry only if packet is received on ctf 
+< 	 * enabled interface
+< 	 */
+< 	if (!ctf_isenabled(kcih, ((rxdev->priv_flags & IFF_802_1Q_VLAN) ?
+< 	                   VLAN_DEV_INFO(rxdev)->real_dev : rxdev)))
+< 		return;
+< 
+< 	br_brc_init(&brc_entry, ea, rxdev);
+< 
+< #ifdef DEBUG
+< 	printk("%s: Adding brc entry\n", __FUNCTION__);
+< #endif
+< 
+< 	/* Add the bridge cache entry */
+< 	if (ctf_brc_lkup(kcih, ea) == NULL)
+< 		ctf_brc_add(kcih, &brc_entry);
+< 	else
+< 		ctf_brc_update(kcih, &brc_entry);
+< 
+< 	return;
+< }
+< 
+< /*
+<  * Update bridge cache entry.
+<  */
+< void
+< br_brc_update(unsigned char *ea, struct net_device *rxdev)
+< {
+< 	ctf_brc_t brc_entry;
+< 
+< 	/* Add brc entry only if packet is received on ctf 
+< 	 * enabled interface
+< 	 */
+< 	if (!ctf_isenabled(kcih, ((rxdev->priv_flags & IFF_802_1Q_VLAN) ?
+< 	                   VLAN_DEV_INFO(rxdev)->real_dev : rxdev)))
+< 		return;
+< 
+< 	/* Initialize the new device and/or vlan info */
+< 	br_brc_init(&brc_entry, ea, rxdev);
+< 
+< #ifdef DEBUG
+< 	printk("%s: Updating brc entry\n", __FUNCTION__);
+< #endif
+< 
+< 	/* Update the bridge cache entry */
+< 	ctf_brc_update(kcih, &brc_entry);
+< 
+< 	return;
+< }
+< #endif /* HNDCTF */
+130a37,54
+> #ifdef CONFIG_BRIDGE_PASSTHROUGH
+>         if(fdb->dst
+>            && fdb->dst->dev
+>            && !strcmp(fdb->dst->dev->name, "eth0"))
+>         {
+> #if     0
+>                 printk("has_expired===>%02x:%02x:%02x:%02x:%02x:%02x\n",
+>                                 fdb->addr.addr[0],
+>                                 fdb->addr.addr[1],
+>                                 fdb->addr.addr[2],
+>                                 fdb->addr.addr[3],
+>                                 fdb->addr.addr[4],
+>                                 fdb->addr.addr[5] );
+> #endif
+> 
+>                 return 0;
+>         }
+> #endif
+230,244d153
+< #ifdef HNDCTF
+< 				ctf_brc_t *brcp;
+< 
+< 				/* Before expiring the fdb entry check the brc
+< 				 * live counter to make sure there are no frames
+< 				 * on this connection for timeout period.
+< 				 */
+< 				brcp = ctf_brc_lkup(kcih, f->addr.addr);
+< 				if ((brcp != NULL) && (brcp->live > 0)) {
+< 					brcp->live = 0;
+< 					f->ageing_timer = jiffies;
+< 					f = g;
+< 					continue;
+< 				}
+< #endif /* HNDCTF */
+304,310c213
+< 	if (atomic_dec_and_test(&ent->use_count)) {
+< #ifdef HNDCTF
+< 		/* Delete the corresponding brc entry when it expires
+< 		 * or deleted by user.
+< 		 */
+< 		ctf_brc_delete(kcih, ent->addr.addr);
+< #endif /* HNDCTF */
+---
+> 	if (atomic_dec_and_test(&ent->use_count))
+312d214
+< 	}
+413,420d314
+< #ifdef HNDCTF
+< 				/* Update the brc entry incase the host moved from
+< 				 * one bridge to another or to a different port under
+< 				 * the same bridge.
+< 				 */
+< 				if (source->state == BR_STATE_FORWARDING)
+< 					br_brc_update(addr, source->dev);
+< #endif /* HNDCTF */
+425a320,328
+> #ifdef CONFIG_BRIDGE_PASSTHROUGH
+>                 	/* if it is local mac, don't insert it */
+>                         if (fdb->is_local && !memcmp(fdb->addr.addr, addr, ETH_ALEN))
+>                         {
+>                                 write_unlock_bh(&br->hash_lock);
+>                                 return;
+>                         }
+> #endif
+> 
+446,450d348
+< #ifdef HNDCTF
+< 	/* Add bridge cache entry for non local hosts */
+< 	if (!is_local && (source->state == BR_STATE_FORWARDING))
+< 		br_brc_add(addr, source->dev);
+< #endif /* HNDCTF */
+451a350,391
+> 
+> #ifdef CONFIG_BRIDGE_PASSTHROUGH
+> /*
+>    1. skb->dev must br device
+>    2. check if skb's destination address is for ifname
+> */
+> struct net_device *br_fast_fdb_compare(struct sk_buff *skb)
+> {
+>         struct net_bridge *br;
+>         struct net_bridge_fdb_entry *fdb;
+>         unsigned char *addr = skb->data;
+>         struct net_device *dev;
+> 
+> #ifdef CONFIG_WC_BRIDGE_TRANSLATION
+>         if(wcbridge_mode) return NULL;
+> #endif
+> 
+>         br = skb->dev->priv;
+>         if(!br) return NULL;
+> 
+>         read_lock_bh(&br->hash_lock);
+>         fdb = br->hash[br_mac_hash(addr)];
+>         while (fdb != NULL) {
+>                 if (!memcmp(fdb->addr.addr, addr, ETH_ALEN)) {
+>                         read_unlock_bh(&br->hash_lock);
+> 
+>                         if(!fdb->dst) return NULL;
+>                         dev = fdb->dst->dev;
+>                         if(dev)
+>                         {
+>                                 br->statistics.tx_packets++;
+>                                 br->statistics.tx_bytes += skb->len;
+>                         }
+>                         return dev;
+>                 }
+>                 fdb = fdb->next_hash;
+>         }
+>         read_unlock_bh(&br->hash_lock);
+>         return NULL;
+> }
+> #endif
+> 
+diff -r bridge/br_forward.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_forward.c
+8c8
+<  *	$Id: br_forward.c,v 1.1.1.1 2012/08/29 05:42:22 bcm5357 Exp $
+---
+>  *	$Id: br_forward.c,v 1.2 2009/11/05 01:14:16 bcmnew Exp $
+29a30,37
+> #ifdef CONFIG_PORT_BASED_VLAN_FEATURE
+>         if(!p->port_map || !skb->dev->br_port)
+>                 return 1;
+>         if(p->port_map & (1<<(skb->dev->br_port->port_no-1)))
+>                 return 1;
+>         else
+>                 return 0;
+> #endif
+Binary files bridge/br_forward.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_forward.o differ
+diff -r bridge/br_if.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_if.c
+8c8
+<  *	$Id: br_if.c,v 1.1.1.1 2012/08/29 05:42:22 bcm5357 Exp $
+---
+>  *	$Id: br_if.c,v 1.1.1.1 2009/10/06 04:34:35 bcmnew Exp $
+24,26d23
+< #ifdef HNDCTF
+< #include <ctf/hndctf.h>
+< #endif /* HNDCTF */
+201,209d197
+< #ifdef HNDCTF
+< 	if ((ctf_dev_register(kcih, &br->dev, TRUE) != BCME_OK) ||
+< 	    (ctf_enable(kcih, &br->dev, TRUE) != BCME_OK)) {
+< 		ctf_dev_unregister(kcih, &br->dev);
+< 		br_del_bridge(name);
+< 		return -ENXIO;
+< 	}
+< #endif /* HNDCTF */
+< 
+230,233d217
+< #ifdef HNDCTF
+< 	ctf_dev_unregister(kcih, &br->dev);
+< #endif /* HNDCTF */
+< 
+Binary files bridge/br_if.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_if.o differ
+diff -r bridge/br_input.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_input.c
+8c8
+<  *	$Id: br_input.c,v 1.1.1.1 2012/08/29 05:42:22 bcm5357 Exp $
+---
+>  *	$Id: br_input.c,v 1.2 2009/11/05 01:14:16 bcmnew Exp $
+44c44
+< 
+---
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+46a47,49
+> #else
+> 	br_pass_frame_up_finish(skb);
+> #endif
+78a82,99
+> #ifdef CONFIG_PORT_BASED_VLAN_FEATURE
+>         if (dest[0] & 1) {
+>                 br_flood_forward(br, skb, !passedup);
+>                 if (!passedup && (!p->port_map || p->port_map & PVLAN_LOCAL_PORT_FLAG))
+>                         br_pass_frame_up(br, skb);
+>                 goto out;
+>         }
+> 
+>         dst = br_fdb_get(br, dest);
+>         if (dst != NULL && dst->is_local) {
+>                 if (!passedup && (!p->port_map || p->port_map & PVLAN_LOCAL_PORT_FLAG)) /* already passed by promiscuos mode ? */
+>                         br_pass_frame_up(br, skb);
+>                 else
+>                         kfree_skb(skb);
+>                 br_fdb_put(dst);
+>                 goto out;
+>         }
+> #else
+79a101
+> 
+94a117
+> #endif
+142a166
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+146a171
+> #endif
+148a174
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+150a177,179
+> #else
+> 		br_handle_frame_finish(skb);
+> #endif
+160a190
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+169a200
+> #endif
+Binary files bridge/br_input.o and /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_input.o differ
+diff -r bridge/br_ioctl.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_ioctl.c
+8c8
+<  *	$Id: br_ioctl.c,v 1.1.1.1 2012/08/29 05:42:21 bcm5357 Exp $
+---
+>  *	$Id: br_ioctl.c,v 1.2 2009/11/05 01:14:16 bcmnew Exp $
+145c145,147
+< 
+---
+> #ifdef CONFIG_PORT_BASED_VLAN_FEATURE
+>                 p.port_map = pt->port_map;
+> #endif
+181a184,194
+> #ifdef CONFIG_PORT_BASED_VLAN_FEATURE
+>         case BRCTL_SET_PORT_MAP:
+>         {
+>                 struct net_bridge_port *p;
+> 
+>                 if ((p = br_get_port(br, arg0)) == NULL)
+>                         return -EINVAL;
+>                 p->port_map = arg1;
+>                 return 0;
+>         }
+> #endif
+183d195
+< 
+diff -r bridge/br_private.h /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_private.h
+7c7
+<  *	$Id: br_private.h,v 1.1.1.1 2012/08/29 05:42:22 bcm5357 Exp $
+---
+>  *	$Id: br_private.h,v 1.2 2009/11/05 01:14:16 bcmnew Exp $
+77a78,83
+> #ifdef CONFIG_PORT_BASED_VLAN_FEATURE
+> 	int                             port_map;
+> #define PVLAN_PASS_ALL_VALUE 0x0
+> #define PVLAN_LOCAL_PORT_FLAG 0x80000000
+> #endif
+> 
+diff -r bridge/br_stp_if.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_stp_if.c
+8c8
+<  *	$Id: br_stp_if.c,v 1.1.1.1 2012/08/29 05:42:21 bcm5357 Exp $
+---
+>  *	$Id: br_stp_if.c,v 1.2 2009/11/05 01:14:16 bcmnew Exp $
+52a53
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+54a56
+> #endif
+71a74
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+77a81
+> #endif
+87a92
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+88a94
+> #endif
+93a100
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+95a103,105
+> #else
+>         p->state = BR_STATE_FORWARDING;
+> #endif
+100a111
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+120a132,134
+> #else
+>         p->state = BR_STATE_DISABLED;
+> #endif
+diff -r bridge/br_stp_timer.c /home/bcm5357/broadcom_sdk/bcm_5.110.27.3/src/linux/linux.efm/net/bridge/br_stp_timer.c
+8c8
+<  *	$Id: br_stp_timer.c,v 1.1.1.1 2012/08/29 05:42:21 bcm5357 Exp $
+---
+>  *	$Id: br_stp_timer.c,v 1.2 2009/11/05 01:14:16 bcmnew Exp $
+149a150
+> #ifndef CONFIG_BRIDGE_PASSTHROUGH
+171a173
+> #endif

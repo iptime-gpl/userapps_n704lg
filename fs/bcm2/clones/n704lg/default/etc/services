@@ -1,0 +1,4 @@
+http		80/tcp
+ftp		21/tcp
+telnet		23/tcp
+

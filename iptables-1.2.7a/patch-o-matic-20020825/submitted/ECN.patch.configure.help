@@ -1,0 +1,15 @@
+CONFIG_IP_NF_TARGET_TOS
+ECN target support
+CONFIG_IP_NF_TARGET_ECN
+  This option adds a `ECN' target, which can be used in the iptables mangle
+  table.  
+
+  You can use this target to remove the ECN bits from the IPv4 header of
+  an IP packet.  This is particularly useful, if you need to work around
+  existing ECN blackholes on the internet, but don't want to disable
+  ECN support in general.
+
+  If you want to compile it as a module, say M here and read
+  Documentation/modules.txt.  If unsure, say `N'.
+
+ 

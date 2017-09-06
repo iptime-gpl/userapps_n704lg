@@ -1,0 +1,10 @@
+CONFIG_IP_NF_MATCH_TOS
+ECN match support
+CONFIG_IP_NF_MATCH_ECN
+  This option adds a `ECN' match, which allows you to match against
+  the IPv4 and TCP header ECN fields.
+
+  If you want to compile it as a module, say M here and read
+  Documentation/modules.txt.  If unsure, say `N'.
+
+ 
