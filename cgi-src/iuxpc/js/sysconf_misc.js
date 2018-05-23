@@ -503,7 +503,10 @@ function ApplySysconfig( rebootDuration )
 			F.snmp_community.select();
 			return;
 		}
-		F2.snmp_run.value = F.snmp_run.value;
+		if(F.snmp_run[0].checked)
+			F2.snmp_run.value = F.snmp_run[0].value;
+		else
+			F2.snmp_run.value = F.snmp_run[1].value;
 		F2.snmp_service_port.value = F.snmp_service_port.value;
 		F2.snmp_community.value = F.snmp_community.value;
 		F2.snmp_sysname.value = F.snmp_sysname.value;

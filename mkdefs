@@ -11,7 +11,7 @@ include $(USERAPPS_ROOT)/config
 include $(USERAPPS_ROOT)/cflags.mk
 LDFLAGS:=
 
-KERNEL_PATH := $(USERAPPS_ROOT)/linux
+#KERNEL_PATH := $(USERAPPS_ROOT)/linux
 
 ifeq ($(USE_NEW_LIB),y)
 # USERLAND_LIB := $(USERAPPS_ROOT)/lib/ul_lib/userland.a
